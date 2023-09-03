@@ -1,0 +1,13 @@
+{
+    "name": "status_bars",
+    "version": "0.0.1",
+    "title": "Status Bars",
+    "author": "asher_sky",
+    "contact": "",
+    "homepage": "",
+    "description": "Reimplimentation of the health, shield, and other status bars.",
+    "factorio_version": "1.1",
+    "dependencies": [
+        "base >= 1.1.89"
+    ]
+}
