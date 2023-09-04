@@ -16,6 +16,65 @@ local caption = false
 ---@field battery_capacity number?
 ---@field max_health number?
 
+local function on_init()
+    global.status_bar_counts = global.status_bar_counts or {}
+    global.status_bar_values = global.status_bar_values or {}
+    global.player_armor = global.player_armor or {} ---@type table<uint, player_armor_data>
+    global.player_vehicle = global.player_vehicle or {} ---@type table<uint, player_vehicle_data>
+    for _, player in pairs(game.players) do
+        global.status_bar_counts[player.index] = 0
+        global.status_bar_values[player.index] = {
+            character_mining_progress = 0,
+            player_health_ratio = 0,
+            player_shield_radio = 0,
+            player_battery_ratio = 0,
+            armor_durability_ratio = 0,
+            vehicle_health_ratio = 0,
+            vehicle_shield_ratio = 0,
+            vehicle_battery_ratio = 0,
+        }
+        global.player_armor[player.index] = {
+            armor = nil,
+            armor_grid = nil,
+            max_durability = nil,
+            max_shield = nil,
+            battery_capacity = nil,
+        }
+        local player_armor = player.get_inventory(defines.inventory.character_armor)[1]
+        if player_armor and player_armor.valid_for_read then
+            local max_durability = player_armor.prototype.durability or 0
+            local armor_grid = player_armor.grid or nil
+            local max_shield = armor_grid and armor_grid.max_shield or 0
+            local battery_capacity = armor_grid and armor_grid.battery_capacity or 0
+            global.player_armor = global.player_armor or {}
+            global.player_armor[player.index] = {
+                armor = player_armor,
+                armor_grid = armor_grid,
+                max_durability = max_durability,
+                max_shield = max_shield,
+                battery_capacity = battery_capacity,
+            }
+        end
+        local vehicle = player.vehicle
+        if vehicle then
+            local max_health = vehicle.prototype.max_health
+            local grid = vehicle.grid
+            local max_shield = grid and grid.max_shield or 0
+            local battery_capacity = grid and grid.battery_capacity or 0
+            global.player_vehicle = global.player_vehicle or {}
+            global.player_vehicle[player.index] = {
+                grid = grid,
+                max_shield = max_shield,
+                battery_capacity = battery_capacity,
+                max_health = max_health,
+            }
+        end
+    end
+end
+
+script.on_init(on_init)
+script.on_configuration_changed(on_init)
+
 ---@param gui_element LuaGuiElement
 local function add_mining_status_bar(gui_element)
     gui_element.add {
