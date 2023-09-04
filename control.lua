@@ -219,10 +219,10 @@ local function refresh_status_bar_gui(player)
             name = "sb_status_bars",
             direction = "vertical",
         }
+        screen.sb_status_bars.style.vertical_spacing = 0
     end
     local status_bars = screen.sb_status_bars
     if not status_bars then return end
-    status_bars.style.vertical_spacing = 0
 
     local status_bar_count = 0
 
