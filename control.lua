@@ -135,6 +135,50 @@ local function update_vehicle_shield_status_bar(gui_element, value)
     gui_element.sb_vehicle_shield_progressbar.value = value
 end
 
+---@param gui_element LuaGuiElement
+local function add_player_battery_status_bar(gui_element)
+    gui_element.add {
+        type = "progressbar",
+        name = "sb_player_battery_progressbar",
+        value = 0,
+    }
+    gui_element.sb_player_battery_progressbar.style = "sb_player_battery_progressbar"
+    gui_element.sb_player_battery_progressbar.style.width = bar_width
+    gui_element.sb_player_battery_progressbar.style.height = bar_height
+    gui_element.sb_player_battery_progressbar.caption = caption and "Armor Battery" or ""
+end
+
+---@param gui_element LuaGuiElement
+---@param value number
+local function update_player_battery_status_bar(gui_element, value)
+    if not gui_element.sb_player_battery_progressbar then
+        add_player_battery_status_bar(gui_element)
+    end
+    gui_element.sb_player_battery_progressbar.value = value
+end
+
+---@param gui_element LuaGuiElement
+local function add_vehicle_battery_status_bar(gui_element)
+    gui_element.add {
+        type = "progressbar",
+        name = "sb_vehicle_battery_progressbar",
+        value = 0,
+    }
+    gui_element.sb_vehicle_battery_progressbar.style = "sb_vehicle_battery_progressbar"
+    gui_element.sb_vehicle_battery_progressbar.style.width = bar_width
+    gui_element.sb_vehicle_battery_progressbar.style.height = bar_height
+    gui_element.sb_vehicle_battery_progressbar.caption = caption and "Vehicle Battery" or ""
+end
+
+---@param gui_element LuaGuiElement
+---@param value number
+local function update_vehicle_battery_status_bar(gui_element, value)
+    if not gui_element.sb_vehicle_battery_progressbar then
+        add_vehicle_battery_status_bar(gui_element)
+    end
+    gui_element.sb_vehicle_battery_progressbar.value = value
+end
+
 ---@param player LuaPlayer
 local function update_status_bar_location(player)
     local screen = player.gui.screen
@@ -185,9 +229,11 @@ local function refresh_status_bar_gui(player)
     local character_mining_progress = 0
     local player_health_ratio = 0
     local player_shield_radio = 0
+    local player_battery_ratio = 0
     local armor_durability_ratio = 0
     local vehicle_health_ratio = 0
     local vehicle_shield_ratio = 0
+    local vehicle_battery_ratio = 0
 
     if player.mining_state.mining then
         character_mining_progress = player.character_mining_progress
@@ -203,10 +249,17 @@ local function refresh_status_bar_gui(player)
 
             local grid = armor.grid
             if grid then
+
                 local shield = grid.shield
                 local max_shield = grid.max_shield
                 if shield and max_shield then
                     player_shield_radio = shield / max_shield
+                end
+
+                local battery_charge = grid.available_in_batteries
+                local battery_capacity = grid.battery_capacity
+                if battery_charge and battery_capacity then
+                    player_battery_ratio = battery_charge / battery_capacity
                 end
             end
 
@@ -229,10 +282,17 @@ local function refresh_status_bar_gui(player)
 
         local grid = vehicle.grid
         if grid then
+
             local shield = grid.shield
             local max_shield = grid.max_shield
             if shield and max_shield then
                 vehicle_shield_ratio = shield / max_shield
+            end
+
+            local battery_charge = grid.available_in_batteries
+            local battery_capacity = grid.battery_capacity
+            if battery_charge and battery_capacity then
+                vehicle_battery_ratio = battery_charge / battery_capacity
             end
         end
     end
@@ -240,9 +300,11 @@ local function refresh_status_bar_gui(player)
     local show_mining_progress_bar = character_mining_progress > 0 and character_mining_progress < 1
     local show_player_health_bar = player_health_ratio > 0 and player_health_ratio < 1
     local show_player_shield_bar = player_shield_radio > 0 and player_shield_radio < 1
+    local show_player_battery_bar = player_battery_ratio > 0 and player_battery_ratio < 1
     local show_armor_durability_bar = armor_durability_ratio > 0 and armor_durability_ratio < 1
     local show_vehicle_health_bar = vehicle_health_ratio > 0 and vehicle_health_ratio < 1
     local show_vehicle_shield_bar = vehicle_shield_ratio > 0 and vehicle_shield_ratio < 1
+    local show_vehicle_battery_bar = vehicle_battery_ratio > 0 and vehicle_battery_ratio < 1
 
     if show_mining_progress_bar then
         status_bar_count = status_bar_count + 1
@@ -251,6 +313,9 @@ local function refresh_status_bar_gui(player)
         status_bar_count = status_bar_count + 1
     end
     if show_player_shield_bar then
+        status_bar_count = status_bar_count + 1
+    end
+    if show_player_battery_bar then
         status_bar_count = status_bar_count + 1
     end
     if show_armor_durability_bar then
@@ -262,6 +327,9 @@ local function refresh_status_bar_gui(player)
     if show_vehicle_shield_bar then
         status_bar_count = status_bar_count + 1
     end
+    if show_vehicle_battery_bar then
+        status_bar_count = status_bar_count + 1
+    end
 
     global.status_bar_counts = global.status_bar_counts or {}
     local last_status_bar_count = global.status_bar_counts[player.index] or 0
@@ -270,9 +338,11 @@ local function refresh_status_bar_gui(player)
     local mining_progress_element = status_bars.sb_player_mining_progressbar
     local player_health_element = status_bars.sb_player_health_progressbar
     local player_shield_element = status_bars.sb_player_shield_progressbar
+    local player_battery_element = status_bars.sb_player_battery_progressbar
     local armor_durability_element = status_bars.sb_armor_durability_progressbar
     local vehicle_health_element = status_bars.sb_vehicle_health_progressbar
     local vehicle_shield_element = status_bars.sb_vehicle_shield_progressbar
+    local vehicle_battery_element = status_bars.sb_vehicle_battery_progressbar
 
     local reset_required = false
     if (show_mining_progress_bar and not mining_progress_element) or (not show_mining_progress_bar and mining_progress_element) then
@@ -284,6 +354,9 @@ local function refresh_status_bar_gui(player)
     if (show_player_shield_bar and not player_shield_element) or (not show_player_shield_bar and player_shield_element) then
         reset_required = true
     end
+    if (show_player_battery_bar and not player_battery_element) or (not show_player_battery_bar and player_battery_element) then
+        reset_required = true
+    end
     if (show_armor_durability_bar and not armor_durability_element) or (not show_armor_durability_bar and armor_durability_element) then
         reset_required = true
     end
@@ -291,6 +364,9 @@ local function refresh_status_bar_gui(player)
         reset_required = true
     end
     if (show_vehicle_shield_bar and not vehicle_shield_element) or (not show_vehicle_shield_bar and vehicle_shield_element) then
+        reset_required = true
+    end
+    if (show_vehicle_battery_bar and not vehicle_battery_element) or (not show_vehicle_battery_bar and vehicle_battery_element) then
         reset_required = true
     end
 
@@ -304,6 +380,9 @@ local function refresh_status_bar_gui(player)
         if player_shield_element then
             player_shield_element.destroy()
         end
+        if player_battery_element then
+            player_battery_element.destroy()
+        end
         if armor_durability_element then
             armor_durability_element.destroy()
         end
@@ -313,6 +392,9 @@ local function refresh_status_bar_gui(player)
         if vehicle_shield_element then
             vehicle_shield_element.destroy()
         end
+        if vehicle_battery_element then
+            vehicle_battery_element.destroy()
+        end
     end
 
     global.status_bar_values = global.status_bar_values or {}
@@ -321,9 +403,11 @@ local function refresh_status_bar_gui(player)
     local mining_progress_changed = character_mining_progress ~= last_status_bar_values.character_mining_progress
     local player_health_changed = player_health_ratio ~= last_status_bar_values.player_health_ratio
     local player_shield_changed = player_shield_radio ~= last_status_bar_values.player_shield_radio
+    local player_battery_changed = player_battery_ratio ~= last_status_bar_values.player_battery_ratio
     local armor_durability_changed = armor_durability_ratio ~= last_status_bar_values.armor_durability_ratio
     local vehicle_health_changed = vehicle_health_ratio ~= last_status_bar_values.vehicle_health_ratio
     local vehicle_shield_changed = vehicle_shield_ratio ~= last_status_bar_values.vehicle_shield_ratio
+    local vehicle_battery_changed = vehicle_battery_ratio ~= last_status_bar_values.vehicle_battery_ratio
 
     if show_mining_progress_bar then
         if mining_progress_changed or reset_required then
@@ -338,6 +422,11 @@ local function refresh_status_bar_gui(player)
     if show_player_shield_bar then
         if player_shield_changed or reset_required then
             update_player_shield_status_bar(status_bars, player_shield_radio)
+        end
+    end
+    if show_player_battery_bar then
+        if player_battery_changed or reset_required then
+            update_player_battery_status_bar(status_bars, player_battery_ratio)
         end
     end
     if show_armor_durability_bar then
@@ -355,6 +444,11 @@ local function refresh_status_bar_gui(player)
             update_vehicle_shield_status_bar(status_bars, vehicle_shield_ratio)
         end
     end
+    if show_vehicle_battery_bar then
+        if vehicle_battery_changed or reset_required then
+            update_vehicle_battery_status_bar(status_bars, vehicle_battery_ratio)
+        end
+    end
 
     global.status_bar_counts[player.index] = status_bar_count
 
@@ -362,9 +456,11 @@ local function refresh_status_bar_gui(player)
         character_mining_progress = character_mining_progress,
         player_health_ratio = player_health_ratio,
         player_shield_radio = player_shield_radio,
+        player_battery_ratio = player_battery_ratio,
         armor_durability_ratio = armor_durability_ratio,
         vehicle_health_ratio = vehicle_health_ratio,
         vehicle_shield_ratio = vehicle_shield_ratio,
+        vehicle_battery_ratio = vehicle_battery_ratio,
     }
 
     if status_bar_count_changed or not status_bars.location then
