@@ -196,12 +196,12 @@ local function update_status_bar_location(player)
         hotbar_height = hotbar_height * display_scale
 
         local status_bar_count = global.status_bar_counts[player.index]
-        local status_bar_height = (bar_height * status_bar_count) + (0 * (status_bar_count - 1)) -- 4 is the padding between bars
-        local status_bar_width = bar_width
-        status_bar_height = status_bar_height * display_scale
-        status_bar_width = status_bar_width * display_scale
-        local width_offset = 24
-        width_offset = width_offset * display_scale
+        local status_bar_height = bar_height * status_bar_count * display_scale
+        local status_bar_width = bar_width * display_scale
+        local width_offset = 24 * display_scale
+
+        status_bar_height = status_bar_height - 2
+
         local location = {
             x = (display_width / 2) - (status_bar_width / 2) - width_offset,
             y = display_height - hotbar_height - status_bar_height,
