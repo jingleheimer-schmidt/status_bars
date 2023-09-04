@@ -406,29 +406,33 @@ local function refresh_status_bar_gui(player)
 
         player_health_ratio = character.get_health_ratio() or 0
 
-        local armor = character.get_inventory(defines.inventory.character_armor)[1]
-        if armor and armor.valid_for_read then
+        global.player_armor = global.player_armor or {}
+        local player_armor_data = global.player_armor[player_index]
+        if player_armor_data then
+            local armor = player_armor_data.armor
+            if armor and armor.valid and armor.valid_for_read then
 
-            local grid = armor.grid
-            if grid then
+                local grid = player_armor_data.armor_grid
+                if grid and grid.valid then
 
-                local shield = grid.shield
-                local max_shield = grid.max_shield
-                if shield and max_shield then
-                    player_shield_radio = shield / max_shield
+                    local shield = grid.shield
+                    local max_shield = player_armor_data.max_shield
+                    if shield and max_shield then
+                        player_shield_radio = shield / max_shield
+                    end
+
+                    local battery_charge = grid.available_in_batteries
+                    local battery_capacity = player_armor_data.battery_capacity
+                    if battery_charge and battery_capacity then
+                        player_battery_ratio = battery_charge / battery_capacity
+                    end
                 end
 
-                local battery_charge = grid.available_in_batteries
-                local battery_capacity = grid.battery_capacity
-                if battery_charge and battery_capacity then
-                    player_battery_ratio = battery_charge / battery_capacity
+                local durability = armor.durability
+                local max_durability = player_armor_data.max_durability
+                if durability and max_durability then
+                    armor_durability_ratio = durability / max_durability
                 end
-            end
-
-            local durability = armor.durability
-            local max_durability = armor.prototype.durability
-            if durability and max_durability then
-                armor_durability_ratio = durability / max_durability
             end
         end
     end
@@ -436,25 +440,29 @@ local function refresh_status_bar_gui(player)
     local vehicle = player.vehicle
     if vehicle then
 
-        local health = vehicle.health
-        local max_health = vehicle.prototype.max_health
-        if health and max_health then
-            vehicle_health_ratio = health / max_health
-        end
-
-        local grid = vehicle.grid
-        if grid then
-
-            local shield = grid.shield
-            local max_shield = grid.max_shield
-            if shield and max_shield then
-                vehicle_shield_ratio = shield / max_shield
+        global.player_vehicle = global.player_vehicle or {}
+        local player_vehicle_data = global.player_vehicle[player_index]
+        if player_vehicle_data then
+            local health = vehicle.health
+            local max_health = player_vehicle_data.max_health
+            if health and max_health then
+                vehicle_health_ratio = health / max_health
             end
 
-            local battery_charge = grid.available_in_batteries
-            local battery_capacity = grid.battery_capacity
-            if battery_charge and battery_capacity then
-                vehicle_battery_ratio = battery_charge / battery_capacity
+            local grid = player_vehicle_data.grid
+            if grid and grid.valid then
+
+                local shield = grid.shield
+                local max_shield = player_vehicle_data.max_shield
+                if shield and max_shield then
+                    vehicle_shield_ratio = shield / max_shield
+                end
+
+                local battery_charge = grid.available_in_batteries
+                local battery_capacity = player_vehicle_data.battery_capacity
+                if battery_charge and battery_capacity then
+                    vehicle_battery_ratio = battery_charge / battery_capacity
+                end
             end
         end
     end
