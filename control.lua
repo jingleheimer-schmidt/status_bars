@@ -404,7 +404,7 @@ local function refresh_status_bar_gui(player)
     local character = player.character
     if character then
 
-        player_health_ratio = tonumber(character.get_health_ratio()) or 0
+        player_health_ratio = character.get_health_ratio() or 0
 
         local armor = character.get_inventory(defines.inventory.character_armor)[1]
         if armor and armor.valid_for_read then
