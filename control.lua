@@ -252,6 +252,90 @@ local function update_vehicle_battery_status_bar(gui_element, value)
 end
 
 ---@param player LuaPlayer
+local function refresh_player_status_bar_data(player)
+    if not player then return end
+    local player_armor = player.get_inventory(defines.inventory.character_armor)[1]
+    if player_armor and player_armor.valid_for_read then
+        local max_durability = player_armor.prototype.durability or 0
+        local armor_grid = player_armor.grid or nil
+        local max_shield = armor_grid and armor_grid.max_shield or 0
+        local battery_capacity = armor_grid and armor_grid.battery_capacity or 0
+        global.player_armor = global.player_armor or {}
+        global.player_armor[player.index] = {
+            armor = player_armor,
+            armor_grid = armor_grid,
+            max_durability = max_durability,
+            max_shield = max_shield,
+            battery_capacity = battery_capacity,
+        }
+    end
+    local vehicle = player.vehicle
+    if vehicle then
+        local max_health = vehicle.prototype.max_health
+        local grid = vehicle.grid
+        local max_shield = grid and grid.max_shield or 0
+        local battery_capacity = grid and grid.battery_capacity or 0
+        global.player_vehicle = global.player_vehicle or {}
+        global.player_vehicle[player.index] = {
+            grid = grid,
+            max_shield = max_shield,
+            battery_capacity = battery_capacity,
+            max_health = max_health,
+        }
+    end
+end
+
+---@param event EventData.on_equipment_inserted
+local function on_equipment_inserted(event)
+    for _, player in pairs(game.connected_players) do
+        refresh_player_status_bar_data(player)
+    end
+end
+
+---@param event EventData.on_equipment_removed
+local function on_equipment_removed(event)
+    for _, player in pairs(game.connected_players) do
+        refresh_player_status_bar_data(player)
+    end
+end
+
+---@param event EventData.on_player_placed_equipment
+local function on_player_placed_equipment(event)
+    local player = game.get_player(event.player_index)
+    if not player then return end
+    refresh_player_status_bar_data(player)
+end
+
+---@param event EventData.on_player_removed_equipment
+local function on_player_removed_equipment(event)
+    local player = game.get_player(event.player_index)
+    if not player then return end
+    refresh_player_status_bar_data(player)
+end
+
+---@param event EventData.on_player_armor_inventory_changed
+local function on_player_armor_inventory_changed(event)
+    local player = game.get_player(event.player_index)
+    if not player then return end
+    refresh_player_status_bar_data(player)
+end
+
+script.on_event(defines.events.on_equipment_inserted, on_equipment_inserted)
+script.on_event(defines.events.on_equipment_removed, on_equipment_removed)
+script.on_event(defines.events.on_player_placed_equipment, on_player_placed_equipment)
+script.on_event(defines.events.on_player_removed_equipment, on_player_removed_equipment)
+script.on_event(defines.events.on_player_armor_inventory_changed, on_player_armor_inventory_changed)
+
+---@param event EventData.on_player_driving_changed_state
+local function on_player_driving_changed_state(event)
+    local player = game.get_player(event.player_index)
+    if not player then return end
+    refresh_player_status_bar_data(player)
+end
+
+script.on_event(defines.events.on_player_driving_changed_state, on_player_driving_changed_state)
+
+---@param player LuaPlayer
 local function update_status_bar_location(player)
     local screen = player.gui.screen
     if screen.sb_status_bars then
