@@ -469,6 +469,7 @@ local function refresh_status_bar_gui(player)
 end
 
 local function on_tick()
+    -- if not (game.tick % 2 == 0) then return end
     for _, player in pairs(game.connected_players) do
         refresh_status_bar_gui(player)
     end
@@ -485,3 +486,11 @@ end
 
 script.on_event(defines.events.on_player_display_resolution_changed, on_display_changed)
 script.on_event(defines.events.on_player_display_scale_changed, on_display_changed)
+
+-- script.on_event(defines.events.on_console_chat, function(event)
+--     game.print("on_console_chat")
+-- end)
+
+-- script.on_event("toggle-console-link", function(event)
+--     game.print("toggle-console-link")
+-- end)
