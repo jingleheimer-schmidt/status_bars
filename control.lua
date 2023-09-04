@@ -368,7 +368,13 @@ end
 
 ---@param player LuaPlayer
 local function refresh_status_bar_gui(player)
-    local screen = player.gui.screen
+    local player_index = player.index
+    global.player_screen_gui = global.player_screen_gui or {}
+    local screen = global.player_screen_gui[player_index]
+    if not screen then
+        screen = player.gui.screen
+        global.player_screen_gui[player_index] = screen
+    end
     if not screen.sb_status_bars then
         screen.add {
             type = "flow",
