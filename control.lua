@@ -639,7 +639,6 @@ local function refresh_status_bar_gui(player)
 end
 
 local function on_tick()
-    -- if not (game.tick % 2 == 0) then return end
     for _, player in pairs(game.connected_players) do
         refresh_status_bar_gui(player)
     end
