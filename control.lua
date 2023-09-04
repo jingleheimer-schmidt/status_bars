@@ -3,6 +3,19 @@ local bar_width = 467 -- width of hotbar
 local bar_height = 13 -- height of original health bar
 local caption = false
 
+---@class player_armor_data
+---@field armor LuaItemStack?
+---@field armor_grid LuaEquipmentGrid?
+---@field max_durability number?
+---@field max_shield number?
+---@field battery_capacity number?
+
+---@class player_vehicle_data
+---@field grid LuaEquipmentGrid?
+---@field max_shield number?
+---@field battery_capacity number?
+---@field max_health number?
+
 ---@param gui_element LuaGuiElement
 local function add_mining_status_bar(gui_element)
     gui_element.add {
