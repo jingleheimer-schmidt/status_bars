@@ -568,7 +568,7 @@ local function refresh_status_bar_gui(player)
     end
 
     global.status_bar_values = global.status_bar_values or {}
-    local last_status_bar_values = global.status_bar_values[player.index] or {}
+    local last_status_bar_values = global.status_bar_values[player_index] or {}
 
     local mining_progress_changed = character_mining_progress ~= last_status_bar_values.character_mining_progress
     local player_health_changed = player_health_ratio ~= last_status_bar_values.player_health_ratio
@@ -620,9 +620,9 @@ local function refresh_status_bar_gui(player)
         end
     end
 
-    global.status_bar_counts[player.index] = status_bar_count
+    global.status_bar_counts[player_index] = status_bar_count
 
-    global.status_bar_values[player.index] = {
+    global.status_bar_values[player_index] = {
         character_mining_progress = character_mining_progress,
         player_health_ratio = player_health_ratio,
         player_shield_radio = player_shield_radio,
