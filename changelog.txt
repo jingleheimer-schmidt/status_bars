@@ -1,7 +1,11 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.1
-Date: TBD
+Date: 05SEP2023
   Changes:
     - initial release to the mod portal
   Features:
-    - none
+    - added per-player mod settings to show/hide individual status bars
+    - added per-player mod settings to recolor individual status bars
+    - added a new status bar for player armor durability
+    - added a new status bar for player battery charge
+    - added a new status bar for vehicle battery charge
