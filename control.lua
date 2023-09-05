@@ -19,6 +19,24 @@ local ceil = math.ceil
 ---@field battery_capacity number?
 ---@field max_health number?
 
+---@class player_mod_settings
+---@field mining_bar_enabled boolean
+---@field mining_bar_color Color
+---@field player_health_bar_enabled boolean
+---@field player_health_bar_color Color
+---@field player_shield_bar_enabled boolean
+---@field player_shield_bar_color Color
+---@field player_battery_bar_enabled boolean
+---@field player_battery_bar_color Color
+---@field durability_bar_enabled boolean
+---@field durability_bar_color Color
+---@field vehicle_health_bar_enabled boolean
+---@field vehicle_health_bar_color Color
+---@field vehicle_shield_bar_enabled boolean
+---@field vehicle_shield_bar_color Color
+---@field vehicle_battery_bar_enabled boolean
+---@field vehicle_battery_bar_color Color
+
 local function on_init()
     global.status_bar_counts = global.status_bar_counts or {}
     global.status_bar_values = global.status_bar_values or {}
