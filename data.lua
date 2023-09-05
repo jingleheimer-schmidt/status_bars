@@ -71,34 +71,25 @@ vehicle_battery_progressbar_style.parent = "sb_basic_healthbar"
 vehicle_battery_progressbar_style.color = { r = 1, g = 1, b = 0 }
 data.raw["gui-style"].default["sb_vehicle_battery_progressbar"] = vehicle_battery_progressbar_style
 
-local modified_basic_healthbar = table.deepcopy(basic_healthbar)
-modified_basic_healthbar.bar_width = 0
-modified_basic_healthbar.color = nil
-modified_basic_healthbar.bar = nil
-modified_basic_healthbar.bar_background = nil
+-- local modified_basic_healthbar = table.deepcopy(basic_healthbar)
+-- modified_basic_healthbar.bar_width = 0
+-- modified_basic_healthbar.color = nil
+-- modified_basic_healthbar.bar = nil
+-- modified_basic_healthbar.bar_background = nil
 
-data.raw["gui-style"].default["health_progressbar"] = modified_basic_healthbar
-data.raw["gui-style"].default["health_progressbar"].bar = nil
-data.raw["gui-style"].default["health_progressbar"].bar_background = nil
-data.raw["gui-style"].default["health_progressbar"].bar_width = 0
+-- data.raw["gui-style"].default["health_progressbar"] = modified_basic_healthbar
+-- data.raw["gui-style"].default["health_progressbar"].bar = nil
+-- data.raw["gui-style"].default["health_progressbar"].bar_background = nil
+-- data.raw["gui-style"].default["health_progressbar"].bar_width = 0
 
-data.raw["gui-style"].default["vehicle_health_progressbar"].bar = nil
-data.raw["gui-style"].default["vehicle_health_progressbar"].bar_background = nil
-data.raw["gui-style"].default["vehicle_health_progressbar"].bar_width = 0
+-- data.raw["gui-style"].default["vehicle_health_progressbar"].bar = nil
+-- data.raw["gui-style"].default["vehicle_health_progressbar"].bar_background = nil
+-- data.raw["gui-style"].default["vehicle_health_progressbar"].bar_width = 0
 
-data.raw["gui-style"].default["mining_progressbar"].bar = nil
-data.raw["gui-style"].default["mining_progressbar"].bar_background = nil
-data.raw["gui-style"].default["mining_progressbar"].bar_width = 0
+-- data.raw["gui-style"].default["mining_progressbar"].bar = nil
+-- data.raw["gui-style"].default["mining_progressbar"].bar_background = nil
+-- data.raw["gui-style"].default["mining_progressbar"].bar_width = 0
 
-data.raw["gui-style"].default["shield_progressbar"].bar = nil
-data.raw["gui-style"].default["shield_progressbar"].bar_background = nil
-data.raw["gui-style"].default["shield_progressbar"].bar_width = 0
-
-local toggle_console_link = {
-    name = "toggle-console-link",
-    type = "custom-input",
-    key_sequence = "",
-    linked_game_control = "toggle-console",
-    action = "lua",
-}
-data:extend{toggle_console_link}
+-- data.raw["gui-style"].default["shield_progressbar"].bar = nil
+-- data.raw["gui-style"].default["shield_progressbar"].bar_background = nil
+-- data.raw["gui-style"].default["shield_progressbar"].bar_width = 0
