@@ -119,6 +119,15 @@ local vehicle_battery_status_bar_color = {
     order = "h-vehicle-battery-2"
 }
 
+local current_hotbar_count = {
+    type = "int-setting",
+    name = "current-hotbar-count",
+    setting_type = "runtime-per-user",
+    default_value = 2,
+    allowed_values = { 1, 2, 3, 4 },
+    order = "x-hotbar-count"
+}
+
 data:extend{
     player_mining_status_bar_enabled,
     player_mining_status_bar_color,
@@ -135,5 +144,6 @@ data:extend{
     vehicle_shield_status_bar_enabled,
     vehicle_shield_status_bar_color,
     vehicle_battery_status_bar_enabled,
-    vehicle_battery_status_bar_color
+    vehicle_battery_status_bar_color,
+    current_hotbar_count
 }

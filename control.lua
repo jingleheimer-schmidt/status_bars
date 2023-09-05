@@ -36,6 +36,7 @@ local ceil = math.ceil
 ---@field vehicle_shield_bar_color Color
 ---@field vehicle_battery_bar_enabled boolean
 ---@field vehicle_battery_bar_color Color
+---@field current_hotbar_count uint
 
 local function on_init()
     global.status_bar_counts = global.status_bar_counts or {}
@@ -110,6 +111,7 @@ local function on_init()
             vehicle_shield_bar_color = mod_settings["vehicle-shield-status-bar-color"].value,
             vehicle_battery_bar_enabled = mod_settings["vehicle-battery-status-bar-enabled"].value,
             vehicle_battery_bar_color = mod_settings["vehicle-battery-status-bar-color"].value,
+            current_hotbar_count = mod_settings["current-hotbar-count"].value,
         }
     end
 end
@@ -138,6 +140,7 @@ local function refresh_mod_settings_data()
             vehicle_shield_bar_color = mod_settings["vehicle-shield-status-bar-color"].value,
             vehicle_battery_bar_enabled = mod_settings["vehicle-battery-status-bar-enabled"].value,
             vehicle_battery_bar_color = mod_settings["vehicle-battery-status-bar-color"].value,
+            current_hotbar_count = mod_settings["current-hotbar-count"].value,
         }
     end
 end
@@ -481,6 +484,9 @@ script.on_event(defines.events.on_player_driving_changed_state, on_player_drivin
 local function update_status_bar_location(player)
     local screen = player.gui.screen
     if screen.sb_status_bars then
+        global.mod_settings = global.mod_settings or {}
+        local mod_settings = global.mod_settings[player.index]
+        local hotbar_count = mod_settings and mod_settings.current_hotbar_count or 2
         local display_resolution = player.display_resolution
         local display_height = display_resolution.height
         local display_width = display_resolution.width
@@ -489,7 +495,6 @@ local function update_status_bar_location(player)
         local hotbar_inner_padding = 1
         local hotbar_single_row_height = 38
         local hotbar_between_row_padding = 2
-        local hotbar_count = 2
         local hotbar_height = (hotbar_border_height * 2) + (hotbar_inner_padding * 2) + (hotbar_single_row_height * hotbar_count) + (hotbar_between_row_padding * (hotbar_count - 1))
         hotbar_height = hotbar_height * display_scale
 
