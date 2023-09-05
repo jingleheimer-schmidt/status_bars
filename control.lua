@@ -155,7 +155,8 @@ local function add_mining_status_bar(gui_element, player_index)
     gui_element.sb_player_mining_progressbar.style = "sb_player_mining_progressbar"
     gui_element.sb_player_mining_progressbar.style.width = bar_width
     gui_element.sb_player_mining_progressbar.style.height = bar_height
-    gui_element.sb_player_mining_progressbar.caption = caption and "Mining Progress" or ""
+    gui_element.sb_player_mining_progressbar.caption = caption and {"tooltips.mining_progress"} or ""
+    gui_element.sb_player_mining_progressbar.tooltip = {"tooltips.mining_progress"}
     local mod_settings = global.mod_settings[player_index]
     if mod_settings then
         gui_element.sb_player_mining_progressbar.style.color = mod_settings.mining_bar_color
@@ -170,6 +171,8 @@ local function update_mining_status_bar(gui_element, value, player_index)
         add_mining_status_bar(gui_element, player_index)
     end
     gui_element.sb_player_mining_progressbar.value = value
+    local tooltip = {"", {"tooltips.mining_progress"}, ": ", ceil(value * 100), "%"}
+    gui_element.sb_player_mining_progressbar.tooltip = tooltip
 end
 
 ---@param gui_element LuaGuiElement
@@ -183,7 +186,8 @@ local function add_armor_durability_status_bar(gui_element, player_index)
     gui_element.sb_armor_durability_progressbar.style = "sb_armor_durability_progressbar"
     gui_element.sb_armor_durability_progressbar.style.width = bar_width
     gui_element.sb_armor_durability_progressbar.style.height = bar_height
-    gui_element.sb_armor_durability_progressbar.caption = caption and "Armor Durability" or ""
+    gui_element.sb_armor_durability_progressbar.caption = caption and {"tooltips.armor_durability"} or ""
+    gui_element.sb_armor_durability_progressbar.tooltip = {"tooltips.armor_durability"}
     local mod_settings = global.mod_settings[player_index]
     if mod_settings then
         gui_element.sb_armor_durability_progressbar.style.color = mod_settings.durability_bar_color
@@ -198,6 +202,8 @@ local function update_armor_durability_status_bar(gui_element, value, player_ind
         add_armor_durability_status_bar(gui_element, player_index)
     end
     gui_element.sb_armor_durability_progressbar.value = value
+    local tooltip = {"", {"tooltips.armor_durability"}, ": ", ceil(value * 100), "%"}
+    gui_element.sb_armor_durability_progressbar.tooltip = tooltip
 end
 
 ---@param gui_element LuaGuiElement
@@ -211,7 +217,8 @@ local function add_player_health_status_bar(gui_element, player_index)
     gui_element.sb_player_health_progressbar.style = "sb_player_health_progressbar"
     gui_element.sb_player_health_progressbar.style.width = bar_width
     gui_element.sb_player_health_progressbar.style.height = bar_height
-    gui_element.sb_player_health_progressbar.caption = caption and "Player Health" or ""
+    gui_element.sb_player_health_progressbar.caption = caption and {"tooltips.player_health"} or ""
+    gui_element.sb_player_health_progressbar.tooltip = {"tooltips.player_health"}
     local mod_settings = global.mod_settings[player_index]
     if mod_settings then
         gui_element.sb_player_health_progressbar.style.color = mod_settings.player_health_bar_color
@@ -226,6 +233,8 @@ local function update_player_health_status_bar(gui_element, value, player_index)
         add_player_health_status_bar(gui_element, player_index)
     end
     gui_element.sb_player_health_progressbar.value = value
+    local tooltip = {"", {"tooltips.player_health"}, ": ", ceil(value * 100), "%"}
+    gui_element.sb_player_health_progressbar.tooltip = tooltip
 end
 
 ---@param gui_element LuaGuiElement
@@ -239,7 +248,8 @@ local function add_vehicle_health_status_bar(gui_element, player_index)
     gui_element.sb_vehicle_health_progressbar.style = "sb_vehicle_health_progressbar"
     gui_element.sb_vehicle_health_progressbar.style.width = bar_width
     gui_element.sb_vehicle_health_progressbar.style.height = bar_height
-    gui_element.sb_vehicle_health_progressbar.caption = caption and "Vehicle Health" or ""
+    gui_element.sb_vehicle_health_progressbar.caption = caption and {"tooltips.vehicle_health"} or ""
+    gui_element.sb_vehicle_health_progressbar.tooltip = {"tooltips.vehicle_health"}
     local mod_settings = global.mod_settings[player_index]
     if mod_settings then
         gui_element.sb_vehicle_health_progressbar.style.color = mod_settings.vehicle_health_bar_color
@@ -254,6 +264,8 @@ local function update_vehicle_health_status_bar(gui_element, value, player_index
         add_vehicle_health_status_bar(gui_element, player_index)
     end
     gui_element.sb_vehicle_health_progressbar.value = value
+    local tooltip = {"", {"tooltips.vehicle_health"}, ": ", ceil(value * 100), "%"}
+    gui_element.sb_vehicle_health_progressbar.tooltip = tooltip
 end
 
 ---@param gui_element LuaGuiElement
@@ -267,7 +279,8 @@ local function add_player_shield_status_bar(gui_element, player_index)
     gui_element.sb_player_shield_progressbar.style = "sb_player_shield_progressbar"
     gui_element.sb_player_shield_progressbar.style.width = bar_width
     gui_element.sb_player_shield_progressbar.style.height = bar_height
-    gui_element.sb_player_shield_progressbar.caption = caption and "Armor Shield" or ""
+    gui_element.sb_player_shield_progressbar.caption = caption and {"tooltips.player_shield"} or ""
+    gui_element.sb_player_shield_progressbar.tooltip = {"tooltips.player_shield"}
     local mod_settings = global.mod_settings[player_index]
     if mod_settings then
         gui_element.sb_player_shield_progressbar.style.color = mod_settings.player_shield_bar_color
@@ -282,6 +295,8 @@ local function update_player_shield_status_bar(gui_element, value, player_index)
         add_player_shield_status_bar(gui_element, player_index)
     end
     gui_element.sb_player_shield_progressbar.value = value
+    local tooltip = {"", {"tooltips.player_shield"}, ": ", ceil(value * 100), "%"}
+    gui_element.sb_player_shield_progressbar.tooltip = tooltip
 end
 
 ---@param gui_element LuaGuiElement
@@ -295,7 +310,8 @@ local function add_vehicle_shield_status_bar(gui_element, player_index)
     gui_element.sb_vehicle_shield_progressbar.style = "sb_vehicle_shield_progressbar"
     gui_element.sb_vehicle_shield_progressbar.style.width = bar_width
     gui_element.sb_vehicle_shield_progressbar.style.height = bar_height
-    gui_element.sb_vehicle_shield_progressbar.caption = caption and "Vehicle Shield" or ""
+    gui_element.sb_vehicle_shield_progressbar.caption = caption and {"tooltips.vehicle_shield"} or ""
+    gui_element.sb_vehicle_shield_progressbar.tooltip = {"tooltips.vehicle_shield"}
     local mod_settings = global.mod_settings[player_index]
     if mod_settings then
         gui_element.sb_vehicle_shield_progressbar.style.color = mod_settings.vehicle_shield_bar_color
@@ -310,6 +326,8 @@ local function update_vehicle_shield_status_bar(gui_element, value, player_index
         add_vehicle_shield_status_bar(gui_element, player_index)
     end
     gui_element.sb_vehicle_shield_progressbar.value = value
+    local tooltip = {"", {"tooltips.vehicle_shield"}, ": ", ceil(value * 100), "%"}
+    gui_element.sb_vehicle_shield_progressbar.tooltip = tooltip
 end
 
 ---@param gui_element LuaGuiElement
@@ -323,7 +341,8 @@ local function add_player_battery_status_bar(gui_element, player_index)
     gui_element.sb_player_battery_progressbar.style = "sb_player_battery_progressbar"
     gui_element.sb_player_battery_progressbar.style.width = bar_width
     gui_element.sb_player_battery_progressbar.style.height = bar_height
-    gui_element.sb_player_battery_progressbar.caption = caption and "Armor Battery" or ""
+    gui_element.sb_player_battery_progressbar.caption = caption and {"tooltips.player_battery"} or ""
+    gui_element.sb_player_battery_progressbar.tooltip = {"tooltips.player_battery"}
     local mod_settings = global.mod_settings[player_index]
     if mod_settings then
         gui_element.sb_player_battery_progressbar.style.color = mod_settings.player_battery_bar_color
@@ -338,6 +357,8 @@ local function update_player_battery_status_bar(gui_element, value, player_index
         add_player_battery_status_bar(gui_element, player_index)
     end
     gui_element.sb_player_battery_progressbar.value = value
+    local tooltip = {"", {"tooltips.player_battery"}, ": ", ceil(value * 100), "%"}
+    gui_element.sb_player_battery_progressbar.tooltip = tooltip
 end
 
 ---@param gui_element LuaGuiElement
@@ -351,7 +372,8 @@ local function add_vehicle_battery_status_bar(gui_element, player_index)
     gui_element.sb_vehicle_battery_progressbar.style = "sb_vehicle_battery_progressbar"
     gui_element.sb_vehicle_battery_progressbar.style.width = bar_width
     gui_element.sb_vehicle_battery_progressbar.style.height = bar_height
-    gui_element.sb_vehicle_battery_progressbar.caption = caption and "Vehicle Battery" or ""
+    gui_element.sb_vehicle_battery_progressbar.caption = caption and {"tooltips.vehicle_battery"} or ""
+    gui_element.sb_vehicle_battery_progressbar.tooltip = {"tooltips.vehicle_battery"}
     local mod_settings = global.mod_settings[player_index]
     if mod_settings then
         gui_element.sb_vehicle_battery_progressbar.style.color = mod_settings.vehicle_battery_bar_color
@@ -366,6 +388,8 @@ local function update_vehicle_battery_status_bar(gui_element, value, player_inde
         add_vehicle_battery_status_bar(gui_element, player_index)
     end
     gui_element.sb_vehicle_battery_progressbar.value = value
+    local tooltip = {"", {"tooltips.vehicle_battery"}, ": ", ceil(value * 100), "%"}
+    gui_element.sb_vehicle_battery_progressbar.tooltip = tooltip
 end
 
 ---@param player LuaPlayer
