@@ -5,7 +5,7 @@
     "author": "asher_sky",
     "contact": "",
     "homepage": "",
-    "description": "Reimplimentation of the health, shield, and other status bars.",
+    "description": "Per-player control for visibility and color of status bars: \n- Player: Mining Progress, Health, Shield, Battery, & Armor Durability \n- Vehicle: Health, Shield, & Battery",
     "factorio_version": "1.1",
     "dependencies": [
         "base >= 1.1.89"
