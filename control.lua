@@ -61,7 +61,8 @@ local function on_init()
             max_shield = nil,
             battery_capacity = nil,
         }
-        local player_armor = player.get_inventory(defines.inventory.character_armor)[1]
+        local inventory = player.get_inventory(defines.inventory.character_armor)
+        local player_armor = inventory and inventory[1] or nil
         if player_armor and player_armor.valid_for_read then
             local max_durability = player_armor.prototype.durability or 0
             local armor_grid = player_armor.grid or nil
