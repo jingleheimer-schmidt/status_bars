@@ -1,5 +1,5 @@
 
-local bar_width = 467 -- width of hotbar
+local bar_width = 468 -- width of hotbar
 local bar_height = 13 -- height of original health bar
 local caption = false
 
