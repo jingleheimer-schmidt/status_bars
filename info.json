@@ -8,6 +8,6 @@
     "description": "Per-player control for visibility and color of status bars: \n- Player: Mining Progress, Health, Shield, Battery, & Armor Durability \n- Vehicle: Health, Shield, & Battery",
     "factorio_version": "1.1",
     "dependencies": [
-        "base >= 1.1.89"
+        "base >= 1.1.87"
     ]
 }
