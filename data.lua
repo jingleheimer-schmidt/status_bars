@@ -4,25 +4,28 @@ local default_gui_styles = data.raw["gui-style"].default
 
 local basic_healthbar =
 {
-    type = "progressbar_style",
-    horizontally_stretchable = "on",
-    bar_width = 13,
-    color = { g = 1 },
-    bar =
-    {
-        filename = "__core__/graphics/gui.png",
-        position = { 223, 0 },
-        size = { 1, 11 },
-        scale = 1
-    },
-    bar_background =
-    {
-        filename = "__core__/graphics/gui.png",
-        position = { 224, 0 },
-        size = { 1, 13 },
-        scale = 1
-    }
+    -- type = "progressbar_style",
+    -- horizontally_stretchable = "on",
+    -- bar_width = 13,
+    -- color = { g = 1 },
+    -- bar =
+    -- {
+    --     filename = "__core__/graphics/gui.png",
+    --     position = { 223, 0 },
+    --     size = { 1, 11 },
+    --     scale = 1
+    -- },
+    -- bar_background =
+    -- {
+    --     filename = "__core__/graphics/gui.png",
+    --     position = { 224, 0 },
+    --     size = { 1, 13 },
+    --     scale = 1
+    -- }
 }
+
+basic_healthbar = util.table.deepcopy(default_gui_styles["health_progressbar"])
+
 data.raw["gui-style"].default["sb_basic_healthbar"] = basic_healthbar
 
 local mining_progressbar_style = table.deepcopy(default_gui_styles["mining_progressbar"])
