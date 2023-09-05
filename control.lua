@@ -3,6 +3,9 @@ local bar_width = 468 -- width of hotbar
 local bar_height = 13 -- height of original health bar
 local caption = false
 
+local floor = math.floor
+local ceil = math.ceil
+
 ---@class player_armor_data
 ---@field armor LuaItemStack?
 ---@field armor_grid LuaEquipmentGrid?
