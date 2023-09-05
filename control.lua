@@ -818,11 +818,3 @@ end
 
 script.on_event(defines.events.on_player_display_resolution_changed, on_display_changed)
 script.on_event(defines.events.on_player_display_scale_changed, on_display_changed)
-
--- script.on_event(defines.events.on_console_chat, function(event)
---     game.print("on_console_chat")
--- end)
-
--- script.on_event("toggle-console-link", function(event)
---     game.print("toggle-console-link")
--- end)
