@@ -796,6 +796,13 @@ end
 
 local function on_tick()
     for _, player in pairs(game.connected_players) do
+        local controller = player.controller_type
+        global.controller_types = global.controller_types or {}
+        local last_controller = global.controller_types[player.index]
+        if controller ~= last_controller then
+            global.controller_types[player.index] = controller
+            refresh_player_status_bar_data(player)
+        end
         refresh_status_bar_gui(player)
     end
 end
