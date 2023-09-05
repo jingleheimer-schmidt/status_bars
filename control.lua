@@ -91,14 +91,62 @@ local function on_init()
                 max_health = max_health,
             }
         end
+        local mod_settings = player.mod_settings
+        global.mod_settings = global.mod_settings or {} ---@type table<uint, player_mod_settings>
+        global.mod_settings[player.index] = {
+            mining_bar_enabled = mod_settings["player-mining-status-bar-enabled"].value,
+            mining_bar_color = mod_settings["player-mining-status-bar-color"].value,
+            player_health_bar_enabled = mod_settings["player-health-status-bar-enabled"].value,
+            player_health_bar_color = mod_settings["player-health-status-bar-color"].value,
+            player_shield_bar_enabled = mod_settings["player-shield-status-bar-enabled"].value,
+            player_shield_bar_color = mod_settings["player-shield-status-bar-color"].value,
+            player_battery_bar_enabled = mod_settings["player-battery-status-bar-enabled"].value,
+            player_battery_bar_color = mod_settings["player-battery-status-bar-color"].value,
+            durability_bar_enabled = mod_settings["armor-durability-status-bar-enabled"].value,
+            durability_bar_color = mod_settings["armor-durability-status-bar-color"].value,
+            vehicle_health_bar_enabled = mod_settings["vehicle-health-status-bar-enabled"].value,
+            vehicle_health_bar_color = mod_settings["vehicle-health-status-bar-color"].value,
+            vehicle_shield_bar_enabled = mod_settings["vehicle-shield-status-bar-enabled"].value,
+            vehicle_shield_bar_color = mod_settings["vehicle-shield-status-bar-color"].value,
+            vehicle_battery_bar_enabled = mod_settings["vehicle-battery-status-bar-enabled"].value,
+            vehicle_battery_bar_color = mod_settings["vehicle-battery-status-bar-color"].value,
+        }
     end
 end
 
 script.on_init(on_init)
 script.on_configuration_changed(on_init)
 
+local function refresh_mod_settings_data()
+    for _, player in pairs(game.connected_players) do
+        local mod_settings = player.mod_settings
+        global.mod_settings = global.mod_settings or {}
+        global.mod_settings[player.index] = {
+            mining_bar_enabled = mod_settings["player-mining-status-bar-enabled"].value,
+            mining_bar_color = mod_settings["player-mining-status-bar-color"].value,
+            player_health_bar_enabled = mod_settings["player-health-status-bar-enabled"].value,
+            player_health_bar_color = mod_settings["player-health-status-bar-color"].value,
+            player_shield_bar_enabled = mod_settings["player-shield-status-bar-enabled"].value,
+            player_shield_bar_color = mod_settings["player-shield-status-bar-color"].value,
+            player_battery_bar_enabled = mod_settings["player-battery-status-bar-enabled"].value,
+            player_battery_bar_color = mod_settings["player-battery-status-bar-color"].value,
+            durability_bar_enabled = mod_settings["armor-durability-status-bar-enabled"].value,
+            durability_bar_color = mod_settings["armor-durability-status-bar-color"].value,
+            vehicle_health_bar_enabled = mod_settings["vehicle-health-status-bar-enabled"].value,
+            vehicle_health_bar_color = mod_settings["vehicle-health-status-bar-color"].value,
+            vehicle_shield_bar_enabled = mod_settings["vehicle-shield-status-bar-enabled"].value,
+            vehicle_shield_bar_color = mod_settings["vehicle-shield-status-bar-color"].value,
+            vehicle_battery_bar_enabled = mod_settings["vehicle-battery-status-bar-enabled"].value,
+            vehicle_battery_bar_color = mod_settings["vehicle-battery-status-bar-color"].value,
+        }
+    end
+end
+
+script.on_event(defines.events.on_runtime_mod_setting_changed, refresh_mod_settings_data)
+
 ---@param gui_element LuaGuiElement
-local function add_mining_status_bar(gui_element)
+---@param player_index uint
+local function add_mining_status_bar(gui_element, player_index)
     gui_element.add {
         type = "progressbar",
         name = "sb_player_mining_progressbar",
@@ -108,19 +156,25 @@ local function add_mining_status_bar(gui_element)
     gui_element.sb_player_mining_progressbar.style.width = bar_width
     gui_element.sb_player_mining_progressbar.style.height = bar_height
     gui_element.sb_player_mining_progressbar.caption = caption and "Mining Progress" or ""
+    local mod_settings = global.mod_settings[player_index]
+    if mod_settings then
+        gui_element.sb_player_mining_progressbar.style.color = mod_settings.mining_bar_color
+    end
 end
 
 ---@param gui_element LuaGuiElement
 ---@param value number
-local function update_mining_status_bar(gui_element, value)
+---@param player_index uint
+local function update_mining_status_bar(gui_element, value, player_index)
     if not gui_element.sb_player_mining_progressbar then
-        add_mining_status_bar(gui_element)
+        add_mining_status_bar(gui_element, player_index)
     end
     gui_element.sb_player_mining_progressbar.value = value
 end
 
 ---@param gui_element LuaGuiElement
-local function add_armor_durability_status_bar(gui_element)
+---@param player_index uint
+local function add_armor_durability_status_bar(gui_element, player_index)
     gui_element.add {
         type = "progressbar",
         name = "sb_armor_durability_progressbar",
@@ -130,19 +184,25 @@ local function add_armor_durability_status_bar(gui_element)
     gui_element.sb_armor_durability_progressbar.style.width = bar_width
     gui_element.sb_armor_durability_progressbar.style.height = bar_height
     gui_element.sb_armor_durability_progressbar.caption = caption and "Armor Durability" or ""
+    local mod_settings = global.mod_settings[player_index]
+    if mod_settings then
+        gui_element.sb_armor_durability_progressbar.style.color = mod_settings.durability_bar_color
+    end
 end
 
 ---@param gui_element LuaGuiElement
 ---@param value number
-local function update_armor_durability_status_bar(gui_element, value)
+---@param player_index uint
+local function update_armor_durability_status_bar(gui_element, value, player_index)
     if not gui_element.sb_armor_durability_progressbar then
-        add_armor_durability_status_bar(gui_element)
+        add_armor_durability_status_bar(gui_element, player_index)
     end
     gui_element.sb_armor_durability_progressbar.value = value
 end
 
 ---@param gui_element LuaGuiElement
-local function add_player_health_status_bar(gui_element)
+---@param player_index uint
+local function add_player_health_status_bar(gui_element, player_index)
     gui_element.add {
         type = "progressbar",
         name = "sb_player_health_progressbar",
@@ -152,19 +212,25 @@ local function add_player_health_status_bar(gui_element)
     gui_element.sb_player_health_progressbar.style.width = bar_width
     gui_element.sb_player_health_progressbar.style.height = bar_height
     gui_element.sb_player_health_progressbar.caption = caption and "Player Health" or ""
+    local mod_settings = global.mod_settings[player_index]
+    if mod_settings then
+        gui_element.sb_player_health_progressbar.style.color = mod_settings.player_health_bar_color
+    end
 end
 
 ---@param gui_element LuaGuiElement
 ---@param value number
-local function update_player_health_status_bar(gui_element, value)
+---@param player_index uint
+local function update_player_health_status_bar(gui_element, value, player_index)
     if not gui_element.sb_player_health_progressbar then
-        add_player_health_status_bar(gui_element)
+        add_player_health_status_bar(gui_element, player_index)
     end
     gui_element.sb_player_health_progressbar.value = value
 end
 
 ---@param gui_element LuaGuiElement
-local function add_vehicle_health_status_bar(gui_element)
+---@param player_index uint
+local function add_vehicle_health_status_bar(gui_element, player_index)
     gui_element.add {
         type = "progressbar",
         name = "sb_vehicle_health_progressbar",
@@ -174,19 +240,25 @@ local function add_vehicle_health_status_bar(gui_element)
     gui_element.sb_vehicle_health_progressbar.style.width = bar_width
     gui_element.sb_vehicle_health_progressbar.style.height = bar_height
     gui_element.sb_vehicle_health_progressbar.caption = caption and "Vehicle Health" or ""
+    local mod_settings = global.mod_settings[player_index]
+    if mod_settings then
+        gui_element.sb_vehicle_health_progressbar.style.color = mod_settings.vehicle_health_bar_color
+    end
 end
 
 ---@param gui_element LuaGuiElement
 ---@param value number
-local function update_vehicle_health_status_bar(gui_element, value)
+---@param player_index uint
+local function update_vehicle_health_status_bar(gui_element, value, player_index)
     if not gui_element.sb_vehicle_health_progressbar then
-        add_vehicle_health_status_bar(gui_element)
+        add_vehicle_health_status_bar(gui_element, player_index)
     end
     gui_element.sb_vehicle_health_progressbar.value = value
 end
 
 ---@param gui_element LuaGuiElement
-local function add_player_shield_status_bar(gui_element)
+---@param player_index uint
+local function add_player_shield_status_bar(gui_element, player_index)
     gui_element.add {
         type = "progressbar",
         name = "sb_player_shield_progressbar",
@@ -196,19 +268,25 @@ local function add_player_shield_status_bar(gui_element)
     gui_element.sb_player_shield_progressbar.style.width = bar_width
     gui_element.sb_player_shield_progressbar.style.height = bar_height
     gui_element.sb_player_shield_progressbar.caption = caption and "Armor Shield" or ""
+    local mod_settings = global.mod_settings[player_index]
+    if mod_settings then
+        gui_element.sb_player_shield_progressbar.style.color = mod_settings.player_shield_bar_color
+    end
 end
 
 ---@param gui_element LuaGuiElement
 ---@param value number
-local function update_player_shield_status_bar(gui_element, value)
+---@param player_index uint
+local function update_player_shield_status_bar(gui_element, value, player_index)
     if not gui_element.sb_player_shield_progressbar then
-        add_player_shield_status_bar(gui_element)
+        add_player_shield_status_bar(gui_element, player_index)
     end
     gui_element.sb_player_shield_progressbar.value = value
 end
 
 ---@param gui_element LuaGuiElement
-local function add_vehicle_shield_status_bar(gui_element)
+---@param player_index uint
+local function add_vehicle_shield_status_bar(gui_element, player_index)
     gui_element.add {
         type = "progressbar",
         name = "sb_vehicle_shield_progressbar",
@@ -218,19 +296,25 @@ local function add_vehicle_shield_status_bar(gui_element)
     gui_element.sb_vehicle_shield_progressbar.style.width = bar_width
     gui_element.sb_vehicle_shield_progressbar.style.height = bar_height
     gui_element.sb_vehicle_shield_progressbar.caption = caption and "Vehicle Shield" or ""
+    local mod_settings = global.mod_settings[player_index]
+    if mod_settings then
+        gui_element.sb_vehicle_shield_progressbar.style.color = mod_settings.vehicle_shield_bar_color
+    end
 end
 
 ---@param gui_element LuaGuiElement
 ---@param value number
-local function update_vehicle_shield_status_bar(gui_element, value)
+---@param player_index uint
+local function update_vehicle_shield_status_bar(gui_element, value, player_index)
     if not gui_element.sb_vehicle_shield_progressbar then
-        add_vehicle_shield_status_bar(gui_element)
+        add_vehicle_shield_status_bar(gui_element, player_index)
     end
     gui_element.sb_vehicle_shield_progressbar.value = value
 end
 
 ---@param gui_element LuaGuiElement
-local function add_player_battery_status_bar(gui_element)
+---@param player_index uint
+local function add_player_battery_status_bar(gui_element, player_index)
     gui_element.add {
         type = "progressbar",
         name = "sb_player_battery_progressbar",
@@ -240,19 +324,25 @@ local function add_player_battery_status_bar(gui_element)
     gui_element.sb_player_battery_progressbar.style.width = bar_width
     gui_element.sb_player_battery_progressbar.style.height = bar_height
     gui_element.sb_player_battery_progressbar.caption = caption and "Armor Battery" or ""
+    local mod_settings = global.mod_settings[player_index]
+    if mod_settings then
+        gui_element.sb_player_battery_progressbar.style.color = mod_settings.player_battery_bar_color
+    end
 end
 
 ---@param gui_element LuaGuiElement
 ---@param value number
-local function update_player_battery_status_bar(gui_element, value)
+---@param player_index uint
+local function update_player_battery_status_bar(gui_element, value, player_index)
     if not gui_element.sb_player_battery_progressbar then
-        add_player_battery_status_bar(gui_element)
+        add_player_battery_status_bar(gui_element, player_index)
     end
     gui_element.sb_player_battery_progressbar.value = value
 end
 
 ---@param gui_element LuaGuiElement
-local function add_vehicle_battery_status_bar(gui_element)
+---@param player_index uint
+local function add_vehicle_battery_status_bar(gui_element, player_index)
     gui_element.add {
         type = "progressbar",
         name = "sb_vehicle_battery_progressbar",
@@ -262,13 +352,18 @@ local function add_vehicle_battery_status_bar(gui_element)
     gui_element.sb_vehicle_battery_progressbar.style.width = bar_width
     gui_element.sb_vehicle_battery_progressbar.style.height = bar_height
     gui_element.sb_vehicle_battery_progressbar.caption = caption and "Vehicle Battery" or ""
+    local mod_settings = global.mod_settings[player_index]
+    if mod_settings then
+        gui_element.sb_vehicle_battery_progressbar.style.color = mod_settings.vehicle_battery_bar_color
+    end
 end
 
 ---@param gui_element LuaGuiElement
 ---@param value number
-local function update_vehicle_battery_status_bar(gui_element, value)
+---@param player_index uint
+local function update_vehicle_battery_status_bar(gui_element, value, player_index)
     if not gui_element.sb_vehicle_battery_progressbar then
-        add_vehicle_battery_status_bar(gui_element)
+        add_vehicle_battery_status_bar(gui_element, player_index)
     end
     gui_element.sb_vehicle_battery_progressbar.value = value
 end
@@ -489,37 +584,51 @@ local function refresh_status_bar_gui(player)
         end
     end
 
-    local show_mining_progress_bar = character_mining_progress > 0 and character_mining_progress < 1
-    local show_player_health_bar = player_health_ratio > 0 and player_health_ratio < 1
-    local show_player_shield_bar = player_shield_radio > 0 and player_shield_radio < 1
-    local show_player_battery_bar = player_battery_ratio > 0 and player_battery_ratio < 1
-    local show_armor_durability_bar = armor_durability_ratio > 0 and armor_durability_ratio < 1
-    local show_vehicle_health_bar = vehicle_health_ratio > 0 and vehicle_health_ratio < 1
-    local show_vehicle_shield_bar = vehicle_shield_ratio > 0 and vehicle_shield_ratio < 1
-    local show_vehicle_battery_bar = vehicle_battery_ratio > 0 and vehicle_battery_ratio < 1
+    global.mod_settings = global.mod_settings or {}
+    local mod_settings = global.mod_settings[player_index]
+    if not mod_settings then refresh_mod_settings_data() end
+    mod_settings = global.mod_settings[player_index]
+    if not mod_settings then return end
+    local enable_mining = mod_settings.mining_bar_enabled
+    local enable_player_health = mod_settings.player_health_bar_enabled
+    local enable_player_shield = mod_settings.player_shield_bar_enabled
+    local enable_player_battery = mod_settings.player_battery_bar_enabled
+    local enable_durability = mod_settings.durability_bar_enabled
+    local enable_vehicle_health = mod_settings.vehicle_health_bar_enabled
+    local enable_vehicle_shield = mod_settings.vehicle_shield_bar_enabled
+    local enable_vehicle_battery = mod_settings.vehicle_battery_bar_enabled
 
-    if show_mining_progress_bar then
+    local show_mining_progress = enable_mining and character_mining_progress > 0 and character_mining_progress < 1
+    local show_player_health = enable_player_health and player_health_ratio > 0 and player_health_ratio < 1
+    local show_player_shield = enable_player_shield and player_shield_radio > 0 and player_shield_radio < 1
+    local show_player_battery = enable_player_battery and player_battery_ratio > 0 and player_battery_ratio < 1
+    local show_armor_durability = enable_durability and armor_durability_ratio > 0 and armor_durability_ratio < 1
+    local show_vehicle_health = enable_vehicle_health and vehicle_health_ratio > 0 and vehicle_health_ratio < 1
+    local show_vehicle_shield = enable_vehicle_shield and vehicle_shield_ratio > 0 and vehicle_shield_ratio < 1
+    local show_vehicle_battery = enable_vehicle_battery and vehicle_battery_ratio > 0 and vehicle_battery_ratio < 1
+
+    if show_mining_progress then
         status_bar_count = status_bar_count + 1
     end
-    if show_player_health_bar then
+    if show_player_health then
         status_bar_count = status_bar_count + 1
     end
-    if show_player_shield_bar then
+    if show_player_shield then
         status_bar_count = status_bar_count + 1
     end
-    if show_player_battery_bar then
+    if show_player_battery then
         status_bar_count = status_bar_count + 1
     end
-    if show_armor_durability_bar then
+    if show_armor_durability then
         status_bar_count = status_bar_count + 1
     end
-    if show_vehicle_health_bar then
+    if show_vehicle_health then
         status_bar_count = status_bar_count + 1
     end
-    if show_vehicle_shield_bar then
+    if show_vehicle_shield then
         status_bar_count = status_bar_count + 1
     end
-    if show_vehicle_battery_bar then
+    if show_vehicle_battery then
         status_bar_count = status_bar_count + 1
     end
 
@@ -537,28 +646,28 @@ local function refresh_status_bar_gui(player)
     local vehicle_battery_element = status_bars.sb_vehicle_battery_progressbar
 
     local reset_required = false
-    if (show_mining_progress_bar and not mining_progress_element) or (not show_mining_progress_bar and mining_progress_element) then
+    if (show_mining_progress and not mining_progress_element) or (not show_mining_progress and mining_progress_element) then
         reset_required = true
     end
-    if (show_player_health_bar and not player_health_element) or (not show_player_health_bar and player_health_element) then
+    if (show_player_health and not player_health_element) or (not show_player_health and player_health_element) then
         reset_required = true
     end
-    if (show_player_shield_bar and not player_shield_element) or (not show_player_shield_bar and player_shield_element) then
+    if (show_player_shield and not player_shield_element) or (not show_player_shield and player_shield_element) then
         reset_required = true
     end
-    if (show_player_battery_bar and not player_battery_element) or (not show_player_battery_bar and player_battery_element) then
+    if (show_player_battery and not player_battery_element) or (not show_player_battery and player_battery_element) then
         reset_required = true
     end
-    if (show_armor_durability_bar and not armor_durability_element) or (not show_armor_durability_bar and armor_durability_element) then
+    if (show_armor_durability and not armor_durability_element) or (not show_armor_durability and armor_durability_element) then
         reset_required = true
     end
-    if (show_vehicle_health_bar and not vehicle_health_element) or (not show_vehicle_health_bar and vehicle_health_element) then
+    if (show_vehicle_health and not vehicle_health_element) or (not show_vehicle_health and vehicle_health_element) then
         reset_required = true
     end
-    if (show_vehicle_shield_bar and not vehicle_shield_element) or (not show_vehicle_shield_bar and vehicle_shield_element) then
+    if (show_vehicle_shield and not vehicle_shield_element) or (not show_vehicle_shield and vehicle_shield_element) then
         reset_required = true
     end
-    if (show_vehicle_battery_bar and not vehicle_battery_element) or (not show_vehicle_battery_bar and vehicle_battery_element) then
+    if (show_vehicle_battery and not vehicle_battery_element) or (not show_vehicle_battery and vehicle_battery_element) then
         reset_required = true
     end
 
@@ -601,44 +710,44 @@ local function refresh_status_bar_gui(player)
     local vehicle_shield_changed = vehicle_shield_ratio ~= last_status_bar_values.vehicle_shield_ratio
     local vehicle_battery_changed = vehicle_battery_ratio ~= last_status_bar_values.vehicle_battery_ratio
 
-    if show_mining_progress_bar then
+    if show_mining_progress then
         if mining_progress_changed or reset_required then
-            update_mining_status_bar(status_bars, character_mining_progress)
+            update_mining_status_bar(status_bars, character_mining_progress, player_index)
         end
     end
-    if show_player_health_bar then
+    if show_player_health then
         if player_health_changed or reset_required then
-            update_player_health_status_bar(status_bars, player_health_ratio)
+            update_player_health_status_bar(status_bars, player_health_ratio, player_index)
         end
     end
-    if show_player_shield_bar then
+    if show_player_shield then
         if player_shield_changed or reset_required then
-            update_player_shield_status_bar(status_bars, player_shield_radio)
+            update_player_shield_status_bar(status_bars, player_shield_radio, player_index)
         end
     end
-    if show_player_battery_bar then
+    if show_player_battery then
         if player_battery_changed or reset_required then
-            update_player_battery_status_bar(status_bars, player_battery_ratio)
+            update_player_battery_status_bar(status_bars, player_battery_ratio, player_index)
         end
     end
-    if show_armor_durability_bar then
+    if show_armor_durability then
         if armor_durability_changed or reset_required then
-            update_armor_durability_status_bar(status_bars, armor_durability_ratio)
+            update_armor_durability_status_bar(status_bars, armor_durability_ratio, player_index)
         end
     end
-    if show_vehicle_health_bar then
+    if show_vehicle_health then
         if vehicle_health_changed or reset_required then
-            update_vehicle_health_status_bar(status_bars, vehicle_health_ratio)
+            update_vehicle_health_status_bar(status_bars, vehicle_health_ratio, player_index)
         end
     end
-    if show_vehicle_shield_bar then
+    if show_vehicle_shield then
         if vehicle_shield_changed or reset_required then
-            update_vehicle_shield_status_bar(status_bars, vehicle_shield_ratio)
+            update_vehicle_shield_status_bar(status_bars, vehicle_shield_ratio, player_index)
         end
     end
-    if show_vehicle_battery_bar then
+    if show_vehicle_battery then
         if vehicle_battery_changed or reset_required then
-            update_vehicle_battery_status_bar(status_bars, vehicle_battery_ratio)
+            update_vehicle_battery_status_bar(status_bars, vehicle_battery_ratio, player_index)
         end
     end
 
