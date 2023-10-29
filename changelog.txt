@@ -3,6 +3,8 @@ Version: 0.0.4
 Date: 28OCT2023
   Bugfixes:
     - fixed that the status bars were 1 pixel too low
+  Features:
+    - status bar colors are now updated immediately when the mod setting values are changed
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.3
 Date: 05SEP2023

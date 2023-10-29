@@ -145,8 +145,6 @@ local function refresh_mod_settings_data()
     end
 end
 
-script.on_event(defines.events.on_runtime_mod_setting_changed, refresh_mod_settings_data)
-
 ---@param gui_element LuaGuiElement
 ---@param player_index uint
 local function add_mining_status_bar(gui_element, player_index)
@@ -515,7 +513,8 @@ local function update_status_bar_location(player)
 end
 
 ---@param player LuaPlayer
-local function refresh_status_bar_gui(player)
+---@param reset boolean
+local function refresh_status_bar_gui(player, reset)
     local player_index = player.index
     global.player_screen_gui = global.player_screen_gui or {}
     local screen = global.player_screen_gui[player_index]
@@ -676,7 +675,7 @@ local function refresh_status_bar_gui(player)
     local vehicle_shield_element = status_bars.sb_vehicle_shield_progressbar
     local vehicle_battery_element = status_bars.sb_vehicle_battery_progressbar
 
-    local reset_required = false
+    local reset_required = reset or false
     if (show_mining_progress and not mining_progress_element) or (not show_mining_progress and mining_progress_element) then
         reset_required = true
     end
@@ -800,6 +799,17 @@ local function refresh_status_bar_gui(player)
     end
 end
 
+---@param event EventData.on_runtime_mod_setting_changed
+local function on_mod_settings_changed(event)
+    local player = game.get_player(event.player_index)
+    if not player then return end
+    refresh_mod_settings_data()
+    refresh_player_status_bar_data(player)
+    refresh_status_bar_gui(player, true)
+end
+
+script.on_event(defines.events.on_runtime_mod_setting_changed, on_mod_settings_changed)
+
 local function on_tick()
     for _, player in pairs(game.connected_players) do
         local controller = player.controller_type
@@ -809,7 +819,7 @@ local function on_tick()
             global.controller_types[player.index] = controller
             refresh_player_status_bar_data(player)
         end
-        refresh_status_bar_gui(player)
+        refresh_status_bar_gui(player, false)
     end
 end
 
