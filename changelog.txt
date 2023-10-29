@@ -5,6 +5,8 @@ Date: 28OCT2023
     - fixed that the status bars were 1 pixel too low
   Features:
     - status bar colors are now updated immediately when the mod setting values are changed
+  Locale:
+    - added German (de) locale from Crowdin
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.3
 Date: 05SEP2023
