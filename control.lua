@@ -496,6 +496,7 @@ local function update_status_bar_location(player)
         local hotbar_single_row_height = 38
         local hotbar_between_row_padding = 2
         local hotbar_height = (hotbar_border_height * 2) + (hotbar_inner_padding * 2) + (hotbar_single_row_height * hotbar_count) + (hotbar_between_row_padding * (hotbar_count - 1))
+        hotbar_height = hotbar_height + 1 -- for some reason the hotbar was 1 pixel too short
         hotbar_height = hotbar_height * display_scale
 
         local status_bar_count = global.status_bar_counts[player.index]
